@@ -16,7 +16,7 @@ export function Handbook() {
         </p>
         <div className="mt-10 space-y-4">
           {chapters.map((c, i) => {
-            const Icon = icons[i];
+            const Icon = icons[i] ?? BookOpen;
             const isOpen = open === i;
             return (
               <div key={c.no} className="card-soft overflow-hidden">

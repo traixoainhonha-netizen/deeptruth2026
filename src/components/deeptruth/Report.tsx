@@ -25,7 +25,7 @@ export function Report() {
     e.preventDefault();
     setError("");
     const parsed = schema.safeParse(form);
-    if (!parsed.success) return setError(parsed.error.issues[0].message);
+    if (!parsed.success) return setError(parsed.error.issues[0]?.message ?? "Dữ liệu chưa hợp lệ");
     if (file && file.size > 10 * 1024 * 1024) return setError("Tệp tối đa 10MB");
     setStatus("sending");
     let evidence_path: string | null = null;

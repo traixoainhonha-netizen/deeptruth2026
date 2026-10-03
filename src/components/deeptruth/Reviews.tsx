@@ -45,7 +45,7 @@ export function Reviews() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const parsed = schema.safeParse(form);
-    if (!parsed.success) return setMsg(parsed.error.issues[0].message);
+    if (!parsed.success) return setMsg(parsed.error.issues[0]?.message ?? "Dữ liệu chưa hợp lệ");
     setSending(true);
     const id = crypto.randomUUID();
     const { error } = await supabase.from("reviews").insert({ id, ...parsed.data });

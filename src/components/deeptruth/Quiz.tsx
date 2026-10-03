@@ -10,7 +10,7 @@ export function Quiz() {
   const [done, setDone] = useState(false);
   const [saved, setSaved] = useState<"idle" | "ok" | "err">("idle");
 
-  const item = quiz[idx];
+  const item = quiz[idx]!;
   const score = answers.filter(Boolean).length;
 
   function choose(c: "real" | "fake") {

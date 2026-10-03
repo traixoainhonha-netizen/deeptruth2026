@@ -101,7 +101,7 @@ export function Quiz() {
                 <div className={`mt-5 rounded-2xl border p-4 ${correct ? "border-success bg-secondary" : "border-destructive/40 bg-destructive/5"}`}>
                   <p className="flex items-center gap-2 font-bold">
                     {correct ? <CheckCircle2 className="h-5 w-5 text-success" /> : <XCircle className="h-5 w-5 text-destructive" />}
-                    {correct ? "Chính xác! Bạn thật tinh mắt 🎉" : `Chưa đúng rồi — đây là ảnh ${item.answer === "real" ? "THẬT" : "GIẢ"}.`}
+                    {correct ? "Chính xác! Bạn thật tinh mắt 🎉" : `Chưa đúng rồi — đây là nội dung ${item.answer === "real" ? "THẬT" : "GIẢ"}.`}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed">{item.explain}</p>
                   {!correct && <p className="mt-2 text-sm font-semibold text-primary">Không sao cả, câu tiếp theo bạn sẽ làm tốt hơn!</p>}

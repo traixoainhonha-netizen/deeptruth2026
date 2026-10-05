@@ -5,48 +5,7 @@ import i4 from "@/assets/IMG_7011.png.asset.json";
 import i5 from "@/assets/IMG_7015.jpeg.asset.json";
 import i6 from "@/assets/IMG_7024.png.asset.json";
 
-export const chapters = [
-  {
-    no: 1,
-    title: "Cẩm nang Toàn diện về Công nghệ Deepfake",
-    points: [
-      "Deepfake là nội dung (ảnh, video, giọng nói) do AI tạo ra hoặc chỉnh sửa để giả mạo một người thật.",
-      "Công nghệ cốt lõi: mạng đối nghịch tạo sinh (GAN), mô hình khuếch tán và mô hình nhân bản giọng nói.",
-      "Chỉ cần vài giây ghi âm hoặc vài tấm ảnh công khai, kẻ xấu đã có thể tạo bản giả khá thuyết phục.",
-      "Rủi ro phổ biến: lừa đảo chuyển tiền, bôi nhọ danh dự, tin giả, bắt nạt học đường.",
-    ],
-  },
-  {
-    no: 2,
-    title: "Dấu hiệu nhận biết qua Thị giác và Âm thanh",
-    points: [
-      "Khuôn mặt: da quá mịn, viền mặt mờ hoặc nhòe, ánh sáng trên mặt không khớp với nền.",
-      "Mắt & miệng: chớp mắt bất thường, khẩu hình không khớp lời nói, răng bị dính khối.",
-      "Chi tiết nhỏ: tai, tóc, kính, khuyên tai bị méo hoặc không đối xứng; chữ trên nền bị biến dạng.",
-      "Âm thanh: giọng đều đều thiếu cảm xúc, ngắt nghỉ lạ, tiếng nền bị cắt đột ngột.",
-    ],
-  },
-  {
-    no: 3,
-    title: "Quy tắc phòng ngừa 3 Giây & 2 Kênh",
-    points: [
-      "3 GIÂY: Dừng lại ít nhất 3 giây trước khi tin, chia sẻ hoặc chuyển tiền — cảm xúc gấp gáp là mồi của kẻ lừa đảo.",
-      "2 KÊNH: Luôn xác minh lại qua một kênh khác (gọi số điện thoại quen, gặp trực tiếp, hỏi người thân).",
-      "Đặt “mật khẩu gia đình” để kiểm tra khi có cuộc gọi khẩn cấp.",
-      "Hạn chế đăng ảnh, video, giọng nói rõ nét ở chế độ công khai.",
-    ],
-  },
-  {
-    no: 4,
-    title: "Khung Pháp lý & Chế tài tại Việt Nam",
-    points: [
-      "Luật An ninh mạng 2018 nghiêm cấm đăng tải thông tin sai sự thật, xúc phạm danh dự người khác.",
-      "Nghị định 13/2023/NĐ-CP bảo vệ dữ liệu cá nhân — hình ảnh, giọng nói là dữ liệu cá nhân.",
-      "Bộ luật Hình sự: tội Lừa đảo chiếm đoạt tài sản (Điều 174), Làm nhục người khác (Điều 155), Vu khống (Điều 156).",
-      "Nạn nhân có quyền trình báo công an và yêu cầu gỡ bỏ nội dung giả mạo.",
-    ],
-  },
-];
+export { chapters } from "./chapters";
 
 export type QuizItem = {
   kind: "image" | "video" | "audio";

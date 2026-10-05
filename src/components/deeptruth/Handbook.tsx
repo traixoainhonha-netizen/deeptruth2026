@@ -36,7 +36,7 @@ export function Handbook() {
                 </button>
                 {isOpen && (
                   <div className="space-y-6 border-t bg-muted px-4 py-5 md:px-6">
-                    {c.groups.map((g) => (
+                    {c.groups.map((g, gi) => (
                       <div key={g.heading}>
                         {c.groups.length > 1 && (
                           <h3 className="mb-3 text-lg font-bold text-primary">{g.heading}</h3>
@@ -45,7 +45,7 @@ export function Handbook() {
                           {g.items.map((it, idx) => (
                             <li key={it.title} className="flex gap-4 rounded-2xl border bg-card p-4">
                               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary font-display font-bold text-primary-foreground">
-                                {idx + 1}
+                                {c.groups.slice(0, gi).reduce((n, x) => n + x.items.length, 0) + idx + 1}
                               </span>
                               <div className="min-w-0">
                                 <p className="font-bold text-foreground">{it.title}</p>

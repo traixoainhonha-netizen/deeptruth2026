@@ -71,8 +71,10 @@ export function Quiz() {
               <div className="h-full bg-primary transition-all" style={{ width: `${(idx / quiz.length) * 100}%` }} />
             </div>
             <div className="p-5">
-              {item.kind === "image" ? (
-                <img src={item.media} alt="Ví dụ cần phân biệt" width={816} height={816} loading="lazy" className="aspect-square w-full rounded-2xl object-cover" />
+              {item.kind === "video" ? (
+                <video key={item.media} src={item.media} controls loop playsInline preload="metadata" className="max-h-[70vh] w-full rounded-2xl bg-foreground" />
+              ) : item.kind === "image" ? (
+                <img key={item.media} src={item.media} alt="Ví dụ cần phân biệt" loading="lazy" className="max-h-[70vh] w-full rounded-2xl bg-muted object-contain" />
               ) : (
                 <div className="rounded-2xl bg-secondary p-6">
                   <div className="flex items-center gap-3 font-bold text-primary"><Headphones className="h-6 w-6" /> Bản ghi âm cuộc gọi</div>
@@ -103,7 +105,7 @@ export function Quiz() {
                     {correct ? <CheckCircle2 className="h-5 w-5 text-success" /> : <XCircle className="h-5 w-5 text-destructive" />}
                     {correct ? "Chính xác! Bạn thật tinh mắt 🎉" : `Chưa đúng rồi — đây là nội dung ${item.answer === "real" ? "THẬT" : "GIẢ"}.`}
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed">{item.explain}</p>
+                  <p className="mt-2 whitespace-pre-line text-sm leading-relaxed">{item.explain}</p>
                   {!correct && <p className="mt-2 text-sm font-semibold text-primary">Không sao cả, câu tiếp theo bạn sẽ làm tốt hơn!</p>}
                   <button onClick={next} className="btn-pill mt-4 w-full">
                     {idx < quiz.length - 1 ? "Câu tiếp theo" : "Xem kết quả"}

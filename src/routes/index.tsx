@@ -9,9 +9,9 @@ import { Reviews } from "@/components/deeptruth/Reviews";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "deeptruth – Bạn đang nhìn thấy thật hay giả?" },
+      { title: "DeepTruth – Bạn đang nhìn thấy thật hay giả?" },
       { name: "description", content: "Dự án NCKH giúp học sinh nhận biết và phòng chống Deepfake: cẩm nang, thử thách thật – giả và kênh báo cáo." },
-      { property: "og:title", content: "deeptruth – Cùng khám phá Deepfake" },
+      { property: "og:title", content: "DeepTruth – Cùng khám phá Deepfake" },
       { property: "og:description", content: "Cẩm nang, thử thách nhận biết và báo cáo Deepfake dành cho học sinh." },
     ],
   }),
@@ -31,7 +31,7 @@ function Index() {
       <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <a href="#trang-chu" className="flex shrink-0 items-center gap-2 font-display text-lg font-extrabold text-primary">
-            <ShieldCheck className="h-6 w-6" /> deeptruth
+            <ShieldCheck className="h-6 w-6" /> DeepTruth
           </a>
           <nav className="flex gap-3 overflow-x-auto text-sm font-medium md:gap-6">
             {nav.map(([l, h]) => <a key={h} href={h} className="whitespace-nowrap hover:text-primary">{l}</a>)}
@@ -63,13 +63,32 @@ function Index() {
         <Reviews />
       </div>
 
-      <footer className="bg-primary px-4 py-10 text-primary-foreground">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 text-center md:flex-row md:justify-between">
-          <p className="font-semibold">deeptruth · Dự án nghiên cứu khoa học phi lợi nhuận</p>
-          <nav className="flex flex-wrap justify-center gap-4 text-sm opacity-90">
-            {nav.map(([l, h]) => <a key={h} href={h} className="hover:underline">{l}</a>)}
-            <a href="#danh-gia" className="hover:underline">Đánh giá</a>
-          </nav>
+      <footer className="bg-footer px-4 pb-8 pt-14 text-footer-foreground">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-10 md:grid-cols-3">
+            <div>
+              <p className="flex items-center gap-2 font-display text-xl font-extrabold"><ShieldCheck className="h-6 w-6" /> DeepTruth</p>
+              <p className="mt-3 max-w-xs text-sm leading-relaxed opacity-70">Dự án nghiên cứu khoa học phi lợi nhuận giúp học sinh nhận biết và phòng chống Deepfake.</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest opacity-50">Khám phá</p>
+              <nav className="mt-4 grid gap-2 text-sm">
+                {nav.map(([l, h]) => <a key={h} href={h} className="opacity-80 transition hover:opacity-100">{l}</a>)}
+                <a href="#danh-gia" className="opacity-80 transition hover:opacity-100">Đánh giá</a>
+              </nav>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest opacity-50">Đường dây nóng</p>
+              <ul className="mt-4 grid gap-2 text-sm opacity-80">
+                <li>Công an: 113</li>
+                <li>Bảo vệ trẻ em: 111</li>
+                <li>canhbao.khonggianmang.vn</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-12 border-t border-footer-foreground/15 pt-6 text-center text-xs opacity-60">
+            © {new Date().getFullYear()} DeepTruth. Mọi quyền được bảo lưu.
+          </div>
         </div>
       </footer>
     </div>

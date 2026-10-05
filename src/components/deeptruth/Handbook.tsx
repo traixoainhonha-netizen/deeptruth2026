@@ -35,14 +35,33 @@ export function Handbook() {
                   <ChevronDown className={`h-5 w-5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                 </button>
                 {isOpen && (
-                  <ul className="space-y-3 border-t bg-muted px-5 py-5 md:px-6">
-                    {c.points.map((p) => (
-                      <li key={p} className="flex gap-3 text-sm leading-relaxed">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                        {p}
-                      </li>
+                  <div className="space-y-6 border-t bg-muted px-4 py-5 md:px-6">
+                    {c.groups.map((g, gi) => (
+                      <div key={g.heading}>
+                        {c.groups.length > 1 && (
+                          <h3 className="mb-3 text-lg font-bold text-primary">{g.heading}</h3>
+                        )}
+                        <ol className="space-y-3">
+                          {g.items.map((it, idx) => (
+                            <li key={it.title} className="flex gap-4 rounded-2xl border bg-card p-4">
+                              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary font-display font-bold text-primary-foreground">
+                                {c.groups.slice(0, gi).reduce((n, x) => n + x.items.length, 0) + idx + 1}
+                              </span>
+                              <div className="min-w-0">
+                                <p className="font-bold text-foreground">{it.title}</p>
+                                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{it.body}</p>
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
                     ))}
-                  </ul>
+                    {c.note && (
+                      <p className="rounded-2xl border border-primary/40 bg-secondary p-4 text-sm leading-relaxed">
+                        <strong className="text-primary">{c.note.label}</strong> {c.note.text}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
             );

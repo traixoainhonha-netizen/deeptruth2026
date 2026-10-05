@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ShieldCheck } from "lucide-react";
 import hero from "@/assets/hero.png";
+import logo from "@/assets/logo.png";
 import { Handbook } from "@/components/deeptruth/Handbook";
 import { Quiz } from "@/components/deeptruth/Quiz";
 import { Report } from "@/components/deeptruth/Report";
@@ -31,7 +31,7 @@ function Index() {
       <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <a href="#trang-chu" className="flex shrink-0 items-center gap-2 font-display text-lg font-extrabold text-primary">
-            <ShieldCheck className="h-6 w-6" /> DeepTruth
+            <img src={logo} alt="Logo DeepTruth" className="h-9 w-auto" /> DeepTruth
           </a>
           <nav className="flex gap-3 overflow-x-auto text-sm font-medium md:gap-6">
             {nav.map(([l, h]) => <a key={h} href={h} className="whitespace-nowrap hover:text-primary">{l}</a>)}
@@ -67,7 +67,7 @@ function Index() {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 md:grid-cols-3">
             <div>
-              <p className="flex items-center gap-2 font-display text-xl font-extrabold"><ShieldCheck className="h-6 w-6" /> DeepTruth</p>
+              <p className="flex items-center gap-2 font-display text-xl font-extrabold"><img src={logo} alt="Logo DeepTruth" className="h-9 w-auto" /> DeepTruth</p>
               <p className="mt-3 max-w-xs text-sm leading-relaxed opacity-70">Dự án nghiên cứu khoa học phi lợi nhuận giúp học sinh nhận biết và phòng chống Deepfake.</p>
             </div>
             <div>

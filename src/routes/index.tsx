@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ShieldCheck } from "lucide-react";
 import hero from "@/assets/hero.png";
 import logo from "@/assets/logo.png";
 import { Handbook } from "@/components/deeptruth/Handbook";

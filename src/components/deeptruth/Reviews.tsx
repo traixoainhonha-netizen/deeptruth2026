@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { Star } from "lucide-react";
+import { Star, ChevronDown, ChevronUp, UserRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 type Review = { id: string; name: string; rating: number; content: string; created_at: string };
 
+const ANON = "Người dùng ẩn danh";
+
 const schema = z.object({
-  name: z.string().trim().min(1, "Vui lòng nhập tên").max(60),
+  name: z.string().trim().max(60),
   content: z.string().trim().min(3, "Viết vài dòng nhé").max(600),
   rating: z.number().int().min(1).max(5),
 });
@@ -25,6 +27,7 @@ function Stars({ n, onPick }: { n: number; onPick?: (v: number) => void }) {
 
 export function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [showAll, setShowAll] = useState(false);
   const [form, setForm] = useState({ name: "", content: "", rating: 5 });
   const [msg, setMsg] = useState("");
   const [sending, setSending] = useState(false);
@@ -48,32 +51,48 @@ export function Reviews() {
     if (!parsed.success) return setMsg(parsed.error.issues[0]?.message ?? "Dữ liệu chưa hợp lệ");
     setSending(true);
     const id = crypto.randomUUID();
-    const { error } = await supabase.from("reviews").insert({ id, ...parsed.data });
+    const row = { id, ...parsed.data, name: parsed.data.name || ANON };
+    const { error } = await supabase.from("reviews").insert(row);
     setSending(false);
     if (error) return setMsg("Gửi chưa thành công, thử lại nhé.");
-    setReviews((prev) => (prev.some((x) => x.id === id) ? prev : [{ id, ...parsed.data, created_at: new Date().toISOString() }, ...prev]));
+    setReviews((prev) => (prev.some((x) => x.id === id) ? prev : [{ ...row, created_at: new Date().toISOString() }, ...prev]));
     setForm({ name: "", content: "", rating: 5 });
     setMsg("Cảm ơn bạn đã đánh giá! 💚");
   }
+
+  const visible = showAll ? reviews : reviews.slice(0, 3);
 
   return (
     <section id="danh-gia" className="scroll-mt-20 bg-muted px-4 py-20">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center text-3xl font-bold text-primary md:text-4xl">Đánh giá từ người dùng</h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {reviews.map((r) => (
-            <div key={r.id} className="card-soft p-5">
+          {visible.map((r) => (
+            <div key={r.id} className="card-soft flex flex-col p-5">
               <Stars n={r.rating} />
-              <p className="mt-3 text-sm leading-relaxed">“{r.content}”</p>
-              <p className="mt-3 text-sm font-bold text-primary">{r.name}</p>
+              <p className="mt-3 flex-1 text-sm leading-relaxed">“{r.content}”</p>
+              <p className="mt-3 flex items-center gap-2 text-sm font-bold text-primary">
+                <UserRound className="h-4 w-4" /> {r.name?.trim() || ANON}
+              </p>
             </div>
           ))}
         </div>
+        {reviews.length > 3 && (
+          <div className="mt-6 text-center">
+            <button type="button" onClick={() => setShowAll(!showAll)} className="btn-pill-outline">
+              {showAll ? <>Thu gọn <ChevronUp className="h-4 w-4" /></> : <>Xem thêm ({reviews.length - 3}) <ChevronDown className="h-4 w-4" /></>}
+            </button>
+          </div>
+        )}
         <form onSubmit={submit} className="card-soft mx-auto mt-10 max-w-xl space-y-4 p-6">
           <p className="text-lg font-bold">Gửi đánh giá của bạn</p>
           <Stars n={form.rating} onPick={(rating) => setForm({ ...form, rating })} />
-          <input className="field" placeholder="Tên của bạn (VD: Lan – 11A3)" maxLength={60} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <label className="block space-y-1">
+            <span className="text-sm font-semibold">Biệt danh hoặc Tên viết tắt (Không bắt buộc)</span>
+            <input className="field" placeholder="VD: M.A, Thành viên #10A5 — để trống để ẩn danh" maxLength={60} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          </label>
           <textarea className="field min-h-24" placeholder="Cảm nhận của bạn..." maxLength={600} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
+          <p className="text-xs text-muted-foreground">Chúng tôi không thu thập thông tin cá nhân. Để trống tên, bạn sẽ hiển thị là “{ANON}”.</p>
           {msg && <p className="text-sm font-semibold text-primary">{msg}</p>}
           <button className="btn-pill w-full" disabled={sending}>{sending ? "Đang gửi..." : "Gửi đánh giá"}</button>
         </form>

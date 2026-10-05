@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { z } from "zod";
-import { Phone, ShieldAlert, Globe, Upload } from "lucide-react";
+import { Phone, ShieldAlert, Globe, Upload, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
@@ -28,15 +28,20 @@ export function Report() {
     if (!parsed.success) return setError(parsed.error.issues[0]?.message ?? "Dữ liệu chưa hợp lệ");
     if (file && file.size > 10 * 1024 * 1024) return setError("Tệp tối đa 10MB");
     setStatus("sending");
-    let evidence_path: string | null = null;
+    let evidence_url: string | null = null;
     if (file) {
       const ext = file.name.split(".").pop()?.replace(/[^a-z0-9]/gi, "") || "bin";
       const path = `${crypto.randomUUID()}.${ext}`;
-      const up = await supabase.storage.from("evidence").upload(path, file);
+      const up = await supabase.storage.from("report-evidence").upload(path, file, { contentType: file.type || undefined });
       if (up.error) { setStatus("idle"); return setError("Không tải được tệp lên, vui lòng thử lại."); }
-      evidence_path = path;
+      evidence_url = `report-evidence/${path}`;
     }
-    const { error: err } = await supabase.from("report_submissions").insert({ ...parsed.data, evidence_path });
+    const { error: err } = await supabase.from("reports").insert({
+      full_name: parsed.data.name,
+      contact_info: parsed.data.contact,
+      description: parsed.data.description,
+      evidence_url,
+    });
     if (err) { setStatus("idle"); return setError("Gửi chưa thành công, vui lòng thử lại."); }
     setStatus("ok");
     setForm({ name: "", contact: "", description: "" });
@@ -73,8 +78,10 @@ export function Report() {
               <input type="file" className="hidden" accept="image/*,video/*,audio/*,.pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
             </label>
             {error && <p className="text-sm font-semibold text-destructive">{error}</p>}
-            {status === "ok" && <p className="text-sm font-semibold text-success">Đã gửi! Nhóm NCKH sẽ xem xét báo cáo của bạn.</p>}
-            <button className="btn-pill w-full" disabled={status === "sending"}>{status === "sending" ? "Đang gửi..." : "Gửi báo cáo"}</button>
+            {status === "ok" && <p className="text-sm font-semibold text-success">Báo cáo của bạn đã được gửi thành công và bảo mật tuyệt đối!</p>}
+            <button className="btn-pill w-full" disabled={status === "sending"}>
+              {status === "sending" ? <><Loader2 className="h-4 w-4 animate-spin" /> Đang gửi...</> : "Gửi báo cáo"}
+            </button>
           </form>
         </div>
       </div>

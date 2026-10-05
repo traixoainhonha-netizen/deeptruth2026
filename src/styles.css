@@ -32,6 +32,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-footer: var(--footer);
+  --color-footer-foreground: var(--footer-foreground);
 }
 
 :root {
@@ -55,6 +57,8 @@
   --border: oklch(0.9 0.025 150);
   --input: oklch(0.9 0.025 150);
   --ring: oklch(0.42 0.07 160);
+  --footer: oklch(0 0 0);
+  --footer-foreground: oklch(1 0 0);
   --shadow-soft: 0 10px 30px -12px color-mix(in oklab, var(--primary) 30%, transparent);
 }
 

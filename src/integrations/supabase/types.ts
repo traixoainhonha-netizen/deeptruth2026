@@ -68,6 +68,33 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          contact_info: string
+          created_at: string
+          description: string
+          evidence_url: string | null
+          full_name: string
+          id: string
+        }
+        Insert: {
+          contact_info: string
+          created_at?: string
+          description: string
+          evidence_url?: string | null
+          full_name: string
+          id?: string
+        }
+        Update: {
+          contact_info?: string
+          created_at?: string
+          description?: string
+          evidence_url?: string | null
+          full_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           content: string

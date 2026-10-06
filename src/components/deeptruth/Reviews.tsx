@@ -72,7 +72,10 @@ export function Reviews() {
             <div className="card-soft mx-auto mt-6 flex w-fit flex-col items-center gap-2 px-8 py-4 sm:flex-row sm:gap-4">
               <p className="font-bold">Đánh giá trung bình: <span className="text-2xl text-primary">{avg.toFixed(1)}</span> / 5 sao</p>
               <Stars n={Math.round(avg)} />
-              <p className="text-sm text-muted-foreground">({reviews.length} đánh giá)
+              <p className="text-sm text-muted-foreground">({reviews.length} đánh giá)</p>
+            </div>
+          );
+        })()}
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((r) => (
             <div key={r.id} className="card-soft flex flex-col p-5">

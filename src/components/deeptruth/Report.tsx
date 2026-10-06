@@ -32,7 +32,7 @@ export function Report() {
     if (file) {
       const ext = file.name.split(".").pop()?.replace(/[^a-z0-9]/gi, "") || "bin";
       const path = `${crypto.randomUUID()}.${ext}`;
-      const up = await supabase.storage.from("report-evidence").upload(path, file, { contentType: file.type || undefined });
+      const up = await supabase.storage.from("report-evidence").upload(path, file, file.type ? { contentType: file.type } : {});
       if (up.error) { setStatus("idle"); return setError("Không tải được tệp lên, vui lòng thử lại."); }
       evidence_url = `report-evidence/${path}`;
     }

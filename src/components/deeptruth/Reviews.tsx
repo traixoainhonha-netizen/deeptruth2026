@@ -27,13 +27,12 @@ function Stars({ n, onPick }: { n: number; onPick?: (v: number) => void }) {
 
 export function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [showAll, setShowAll] = useState(false);
   const [form, setForm] = useState({ name: "", content: "", rating: 5 });
   const [msg, setMsg] = useState("");
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    supabase.from("reviews").select("*").order("created_at", { ascending: false }).limit(30)
+    supabase.from("reviews").select("*").order("created_at", { ascending: false }).limit(1000)
       .then(({ data }) => data && setReviews(data));
     const ch = supabase
       .channel("reviews-feed")
@@ -60,7 +59,8 @@ export function Reviews() {
     setMsg("Cảm ơn bạn đã đánh giá! 💚");
   }
 
-  const visible = showAll ? reviews : reviews.slice(0, 3);
+  const [count, setCount] = useState(3);
+  const visible = reviews.slice(0, count);
 
   return (
     <section id="danh-gia" className="scroll-mt-20 bg-muted px-4 py-20">
@@ -78,10 +78,17 @@ export function Reviews() {
           ))}
         </div>
         {reviews.length > 3 && (
-          <div className="mt-6 text-center">
-            <button type="button" onClick={() => setShowAll(!showAll)} className="btn-pill-outline">
-              {showAll ? <>Thu gọn <ChevronUp className="h-4 w-4" /></> : <>Xem thêm ({reviews.length - 3}) <ChevronDown className="h-4 w-4" /></>}
-            </button>
+          <div className="mt-6 flex justify-center gap-3">
+            {count < reviews.length && (
+              <button type="button" onClick={() => setCount(count + 6)} className="btn-pill-outline">
+                Xem thêm ({reviews.length - count}) <ChevronDown className="h-4 w-4" />
+              </button>
+            )}
+            {count > 3 && (
+              <button type="button" onClick={() => setCount(3)} className="btn-pill-outline">
+                Thu gọn <ChevronUp className="h-4 w-4" />
+              </button>
+            )}
           </div>
         )}
         <form onSubmit={submit} className="card-soft mx-auto mt-10 max-w-xl space-y-4 p-6">

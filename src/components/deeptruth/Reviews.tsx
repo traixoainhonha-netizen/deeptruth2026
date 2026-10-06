@@ -66,6 +66,13 @@ export function Reviews() {
     <section id="danh-gia" className="scroll-mt-20 bg-muted px-4 py-20">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center text-3xl font-bold text-primary md:text-4xl">Đánh giá từ người dùng</h2>
+        {reviews.length > 0 && (() => {
+          const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+          return (
+            <div className="card-soft mx-auto mt-6 flex w-fit flex-col items-center gap-2 px-8 py-4 sm:flex-row sm:gap-4">
+              <p className="font-bold">Đánh giá trung bình: <span className="text-2xl text-primary">{avg.toFixed(1)}</span> / 5 sao</p>
+              <Stars n={Math.round(avg)} />
+              <p className="text-sm text-muted-foreground">({reviews.length} đánh giá)
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((r) => (
             <div key={r.id} className="card-soft flex flex-col p-5">

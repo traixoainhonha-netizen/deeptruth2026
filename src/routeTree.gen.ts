@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BanDoRouteImport } from './routes/ban-do'
+import { Route as BaoCaoRouteImport } from './routes/bao-cao'
+import { Route as CamNangRouteImport } from './routes/cam-nang'
+import { Route as DanhGiaRouteImport } from './routes/danh-gia'
+import { Route as ThuThachRouteImport } from './routes/thu-thach'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BanDoRoute = BanDoRouteImport.update({
+  id: '/ban-do',
+  path: '/ban-do',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BaoCaoRoute = BaoCaoRouteImport.update({
+  id: '/bao-cao',
+  path: '/bao-cao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CamNangRoute = CamNangRouteImport.update({
+  id: '/cam-nang',
+  path: '/cam-nang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DanhGiaRoute = DanhGiaRouteImport.update({
+  id: '/danh-gia',
+  path: '/danh-gia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThuThachRoute = ThuThachRouteImport.update({
+  id: '/thu-thach',
+  path: '/thu-thach',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ban-do': typeof BanDoRoute
+  '/bao-cao': typeof BaoCaoRoute
+  '/cam-nang': typeof CamNangRoute
+  '/danh-gia': typeof DanhGiaRoute
+  '/thu-thach': typeof ThuThachRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ban-do': typeof BanDoRoute
+  '/bao-cao': typeof BaoCaoRoute
+  '/cam-nang': typeof CamNangRoute
+  '/danh-gia': typeof DanhGiaRoute
+  '/thu-thach': typeof ThuThachRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ban-do': typeof BanDoRoute
+  '/bao-cao': typeof BaoCaoRoute
+  '/cam-nang': typeof CamNangRoute
+  '/danh-gia': typeof DanhGiaRoute
+  '/thu-thach': typeof ThuThachRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/ban-do' | '/bao-cao' | '/cam-nang' | '/danh-gia' | '/thu-thach'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/ban-do' | '/bao-cao' | '/cam-nang' | '/danh-gia' | '/thu-thach'
+  id:
+    | '__root__'
+    | '/'
+    | '/ban-do'
+    | '/bao-cao'
+    | '/cam-nang'
+    | '/danh-gia'
+    | '/thu-thach'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BanDoRoute: typeof BanDoRoute
+  BaoCaoRoute: typeof BaoCaoRoute
+  CamNangRoute: typeof CamNangRoute
+  DanhGiaRoute: typeof DanhGiaRoute
+  ThuThachRoute: typeof ThuThachRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ban-do': {
+      id: '/ban-do'
+      path: '/ban-do'
+      fullPath: '/ban-do'
+      preLoaderRoute: typeof BanDoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bao-cao': {
+      id: '/bao-cao'
+      path: '/bao-cao'
+      fullPath: '/bao-cao'
+      preLoaderRoute: typeof BaoCaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cam-nang': {
+      id: '/cam-nang'
+      path: '/cam-nang'
+      fullPath: '/cam-nang'
+      preLoaderRoute: typeof CamNangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/danh-gia': {
+      id: '/danh-gia'
+      path: '/danh-gia'
+      fullPath: '/danh-gia'
+      preLoaderRoute: typeof DanhGiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/thu-thach': {
+      id: '/thu-thach'
+      path: '/thu-thach'
+      fullPath: '/thu-thach'
+      preLoaderRoute: typeof ThuThachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BanDoRoute: BanDoRoute,
+  BaoCaoRoute: BaoCaoRoute,
+  CamNangRoute: CamNangRoute,
+  DanhGiaRoute: DanhGiaRoute,
+  ThuThachRoute: ThuThachRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

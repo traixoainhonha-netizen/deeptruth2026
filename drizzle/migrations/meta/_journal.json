@@ -15,6 +15,13 @@
       "when": 1791244181194,
       "tag": "0001_create_reports",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791364965849,
+      "tag": "0002_threat_map_review_archive",
+      "breakpoints": true
     }
   ]
 }

@@ -60,7 +60,7 @@ export function ReviewCard({
       </p>
       <p className="mt-4 flex items-center gap-2.5 text-sm font-bold text-primary">
         <Avatar name={name} />
-        <span className="truncate">{name}</span>
+        <span className="min-w-0 break-words">{name}</span>
       </p>
     </article>
   );

@@ -35,7 +35,7 @@ export function MapTeaser() {
   return (
     <section
       ref={ref}
-      className="ops-theme ops-grid-bg relative isolate overflow-hidden px-4 py-24"
+      className="ops-theme ops-grid-bg relative isolate overflow-hidden px-4 py-16 md:py-24"
     >
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <Reveal variant="left">
@@ -55,7 +55,7 @@ export function MapTeaser() {
               { label: "7 ngày qua", value: recent },
               { label: "Khu vực", value: regionCount },
             ].map((k) => (
-              <div key={k.label} className="rounded-2xl border bg-card/60 px-4 py-3 backdrop-blur">
+              <div key={k.label} className="rounded-2xl border bg-card/80 px-3 py-3 sm:px-4">
                 <dt className="text-xs uppercase tracking-wider text-muted-foreground">
                   {k.label}
                 </dt>
@@ -95,7 +95,7 @@ export function MapTeaser() {
                       <Icon className="h-5 w-5" aria-hidden />
                     </span>
                     <span className="min-w-0">
-                      <span className="block truncate font-semibold">{r.title}</span>
+                      <span className="line-clamp-2 font-semibold leading-snug">{r.title}</span>
                       <span className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
                         <span style={{ color: meta.color }}>{meta.label}</span>·
                         <span className="inline-flex items-center gap-1">

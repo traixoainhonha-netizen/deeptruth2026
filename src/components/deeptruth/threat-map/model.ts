@@ -97,6 +97,15 @@ export const AREA_LABELS: Record<RegionArea, string> = {
   online: "Trên mạng",
 };
 
+/**
+ * Region name for compact spots (KPIs, rankings, the globe label). The online bucket's
+ * full name is the longest one, so it gets a short form; "TP. Hồ Chí Minh" is then the
+ * longest label and the layouts are sized for it.
+ */
+export function shortRegionName(region: { name: string; area: RegionArea }) {
+  return region.area === "online" ? AREA_LABELS.online : region.name;
+}
+
 export const DANGER_LEVELS = [
   { value: 1, label: "Thấp" },
   { value: 2, label: "Cần lưu ý" },

@@ -13,17 +13,17 @@ function TableOfContents() {
   return (
     <nav aria-label="Mục lục cẩm nang">
       <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Mục lục</p>
-      <ol className="mt-3 flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:gap-1 lg:overflow-visible">
+      <ol className="mt-3 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:grid-cols-1 lg:gap-1">
         {chapters.map((c, i) => {
           const Icon = ICONS[i] ?? BookOpen;
           const isActive = active === chapterId(c.no);
           return (
-            <li key={c.no} className="shrink-0">
+            <li key={c.no}>
               <a
                 href={`#${chapterId(c.no)}`}
                 aria-current={isActive ? "true" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-all duration-300 lg:border-transparent",
+                  "flex h-full items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-[background-color,color,border-color] duration-300 lg:border-transparent",
                   isActive
                     ? "border-primary/30 bg-secondary font-semibold text-primary lg:border-primary/30"
                     : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
@@ -37,11 +37,11 @@ function TableOfContents() {
                 >
                   <Icon className="h-3.5 w-3.5" aria-hidden />
                 </span>
-                <span className="max-w-[14rem] leading-snug">
+                <span className="min-w-0 leading-snug">
                   <span className="block text-[11px] uppercase tracking-wider opacity-70">
                     Chương {c.no}
                   </span>
-                  <span className="line-clamp-2">{c.title}</span>
+                  <span className="block">{c.title}</span>
                 </span>
               </a>
             </li>

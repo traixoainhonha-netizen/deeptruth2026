@@ -99,6 +99,15 @@
 @layer base {
   * { border-color: var(--color-border); }
   html { scroll-behavior: smooth; }
+  /* Nothing may widen the page on phones: a wider layout makes mobile browsers zoom
+     out and cut content. `clip` (unlike `hidden`) keeps position: sticky working. */
+  html, body { overflow-x: hidden; }
+  @supports (overflow: clip) {
+    html, body { overflow-x: clip; }
+  }
+  /* Grid children default to min-width: auto, so one long row (chips, a URL)
+     could stretch a column past the screen. Zero specificity: utilities still win. */
+  :where(.grid) > * { min-width: 0; }
   /* Lenis drives the scroll position itself; native smoothing would fight it. */
   html.lenis { scroll-behavior: auto; }
   body {
@@ -127,8 +136,11 @@
   }
   .js [data-reveal="fade"] { transform: none; }
   .js [data-reveal="scale"] { transform: scale(0.95); }
-  .js [data-reveal="left"] { transform: translate3d(-32px, 0, 0); }
-  .js [data-reveal="right"] { transform: translate3d(32px, 0, 0); }
+  /* Sideways entrances only where there is room; phones slide up instead. */
+  @media (min-width: 768px) {
+    .js [data-reveal="left"] { transform: translate3d(-32px, 0, 0); }
+    .js [data-reveal="right"] { transform: translate3d(32px, 0, 0); }
+  }
   .js [data-reveal].is-revealed { opacity: 1; transform: none; }
   .js:not(.hydrated) [data-reveal]:not(.is-revealed) {
     animation: reveal-fallback 0.6s ease-out 2.5s forwards;
@@ -171,7 +183,9 @@
   transition: opacity 0.35s;
   pointer-events: none;
 }
-[data-spotlight]:hover::before { opacity: 1; }
+@media (hover: hover) {
+  [data-spotlight]:hover::before { opacity: 1; }
+}
 
 @keyframes aurora-a {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
@@ -230,7 +244,9 @@
     transform 0.25s var(--ease-out-expo),
     background 0.2s,
     box-shadow 0.25s var(--ease-out-expo);
-  &:hover { transform: translateY(-2px); background: color-mix(in oklab, var(--primary) 85%, black); box-shadow: var(--shadow-lift); }
+  @media (hover: hover) {
+    &:hover { transform: translateY(-2px); background: color-mix(in oklab, var(--primary) 85%, black); box-shadow: var(--shadow-lift); }
+  }
   &:active { transform: translateY(0) scale(0.97); }
   &:disabled { opacity: 0.6; transform: none; cursor: not-allowed; box-shadow: var(--shadow-soft); }
 }
@@ -251,7 +267,9 @@
     transform 0.25s var(--ease-out-expo),
     background 0.2s,
     color 0.2s;
-  &:hover { background: var(--primary); color: var(--primary-foreground); transform: translateY(-2px); }
+  @media (hover: hover) {
+    &:hover { background: var(--primary); color: var(--primary-foreground); transform: translateY(-2px); }
+  }
   &:active { transform: translateY(0) scale(0.97); }
   &:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
 }
@@ -263,17 +281,20 @@
   box-shadow: var(--shadow-soft);
 }
 
-/* Lift on hover for interactive cards. */
+/* Lift on hover for interactive cards (mouse only: taps must not leave cards stuck up). */
 @utility card-hover {
   transition:
     transform 0.35s var(--ease-out-expo),
     box-shadow 0.35s var(--ease-out-expo),
     border-color 0.25s;
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lift);
-    border-color: color-mix(in oklab, var(--primary) 35%, var(--border));
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lift);
+      border-color: color-mix(in oklab, var(--primary) 35%, var(--border));
+    }
   }
+  &:active { transform: scale(0.99); }
 }
 
 /* One-shot entrance used above the fold, where JS-driven reveals would delay paint. */
@@ -332,10 +353,12 @@
 
 @utility aurora-a {
   animation: aurora-a 14s ease-in-out infinite;
+  will-change: transform;
 }
 
 @utility aurora-b {
   animation: aurora-b 18s ease-in-out infinite;
+  will-change: transform;
 }
 
 @utility scrollbar-thin {

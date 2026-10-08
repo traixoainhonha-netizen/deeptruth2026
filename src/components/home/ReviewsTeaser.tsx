@@ -15,7 +15,7 @@ export function ReviewsTeaser() {
   const now = useNow();
 
   return (
-    <section ref={ref} className="px-4 py-24">
+    <section ref={ref} className="px-4 py-16 md:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Bước 5 · Góp ý"

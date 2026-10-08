@@ -12,6 +12,7 @@ import {
   getVoterToken,
   readVotes,
   rememberVote,
+  shortRegionName,
 } from "@/components/deeptruth/threat-map/model";
 import { threatReportSchema } from "@/components/deeptruth/threat-map/schema";
 
@@ -88,6 +89,15 @@ describe("danger scale", () => {
   it("computes the average from counters (as realtime payloads carry them)", () => {
     expect(dangerScoreOf({ vote_count: 0, danger_total: 0 })).toBeNull();
     expect(dangerScoreOf({ vote_count: 3, danger_total: 11 })).toBe(3.67);
+  });
+});
+
+describe("shortRegionName", () => {
+  it("shortens only the online bucket", () => {
+    expect(shortRegionName({ name: "Trên mạng / không rõ vị trí", area: "online" })).toBe(
+      "Trên mạng",
+    );
+    expect(shortRegionName({ name: "TP. Hồ Chí Minh", area: "south" })).toBe("TP. Hồ Chí Minh");
   });
 });
 

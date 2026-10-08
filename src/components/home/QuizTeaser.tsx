@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, ScanEye } from "lucide-react";
+import teaserImage from "@/assets/quiz/quiz-4-teaser.webp";
 import { quiz } from "@/components/deeptruth/data";
 import { Reveal } from "@/components/motion/Reveal";
 
-const sample = quiz.find((q) => q.kind === "image");
 const videos = quiz.filter((q) => q.kind === "video").length;
 const images = quiz.filter((q) => q.kind === "image").length;
 
@@ -18,18 +18,20 @@ export function QuizTeaser() {
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
-    <section className="overflow-hidden bg-muted px-4 py-24">
+    <section className="overflow-hidden bg-muted px-4 py-16 md:py-24">
       <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
         <Reveal variant="left" className="relative mx-auto w-full max-w-md">
           <div
             aria-hidden
-            className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/10 blur-2xl"
+            className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_18%,transparent),transparent)]"
           />
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border bg-card shadow-[var(--shadow-lift)]">
-            {sample?.media && !imageFailed ? (
+            {!imageFailed ? (
               <img
-                src={sample.media}
+                src={teaserImage}
                 alt="Một ví dụ trong thử thách Thật hay Giả"
+                width={720}
+                height={1082}
                 loading="lazy"
                 decoding="async"
                 onError={() => setImageFailed(true)}
@@ -40,11 +42,11 @@ export function QuizTeaser() {
                 <ScanEye className="h-20 w-20 text-primary/40" aria-hidden />
               </div>
             )}
-            <span className="absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-sm font-bold text-primary backdrop-blur">
+            <span className="absolute left-4 top-4 rounded-full bg-background/95 px-3 py-1 text-sm font-bold text-primary shadow-sm">
               Thật hay giả?
             </span>
             <div aria-hidden className="absolute inset-x-4 bottom-4 grid grid-cols-2 gap-2">
-              <span className="rounded-full bg-background/90 py-2 text-center font-bold text-primary backdrop-blur">
+              <span className="rounded-full bg-background/95 py-2 text-center font-bold text-primary shadow-sm">
                 Thật
               </span>
               <span className="rounded-full bg-primary py-2 text-center font-bold text-primary-foreground">

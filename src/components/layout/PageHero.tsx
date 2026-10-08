@@ -19,56 +19,119 @@ export function Aurora({ className }: { className?: string }) {
   );
 }
 
-/** The five-step learning journey, with the current page highlighted. */
+type StepState = "done" | "current" | "todo";
+
+function StepDot({
+  state,
+  index,
+  className,
+}: {
+  state: StepState;
+  index: number;
+  className?: string;
+}) {
+  return (
+    <span
+      className={cn(
+        "grid shrink-0 place-items-center rounded-full font-bold transition-colors duration-300",
+        state === "current"
+          ? "bg-primary text-primary-foreground ring-4 ring-primary/20"
+          : state === "done"
+            ? "bg-primary text-primary-foreground"
+            : "border-2 border-border bg-background text-muted-foreground",
+        className,
+      )}
+    >
+      {state === "done" ? <Check className="h-3.5 w-3.5" aria-hidden /> : index}
+    </span>
+  );
+}
+
+/**
+ * The five-step learning journey. Phones get five connected dots that always fit
+ * the screen; wider screens get five equal cards. Nothing scrolls sideways.
+ */
 function JourneyProgress({ current }: { current: PagePath }) {
   const currentIndex = JOURNEY.findIndex((p) => p.to === current);
+  const stateOf = (i: number): StepState =>
+    i < currentIndex ? "done" : i === currentIndex ? "current" : "todo";
+  // Dots sit at the centre of five equal columns: 10% … 90% of the row.
+  const progress = Math.max(0, currentIndex) / (JOURNEY.length - 1);
+
   return (
-    <ol
-      className="scrollbar-thin mt-10 flex gap-2 overflow-x-auto pb-1"
-      aria-label="Hành trình DeepTruth"
-    >
-      {JOURNEY.map((p, i) => {
-        const state = i < currentIndex ? "done" : i === currentIndex ? "current" : "todo";
-        return (
-          <li key={p.to} className="min-w-[9.5rem] flex-1">
-            <Link
-              to={p.to}
-              aria-current={state === "current" ? "step" : undefined}
-              className={cn(
-                "group flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-sm transition-all duration-300",
-                state === "current"
-                  ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-soft)]"
-                  : "bg-background/60 backdrop-blur-sm hover:-translate-y-0.5 hover:border-primary/40",
-              )}
-            >
-              <span
-                className={cn(
-                  "grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-bold",
-                  state === "current"
-                    ? "bg-primary-foreground text-primary"
-                    : state === "done"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-primary",
-                )}
+    <nav aria-label="Hành trình DeepTruth" className="mt-10">
+      <ol className="relative grid grid-cols-5 md:hidden">
+        <span aria-hidden className="absolute left-[10%] right-[10%] top-4 h-0.5 bg-border" />
+        <span
+          aria-hidden
+          className="absolute left-[10%] top-4 h-0.5 bg-primary transition-[width] duration-700"
+          style={{ width: `${progress * 80}%` }}
+        />
+        {JOURNEY.map((p, i) => {
+          const state = stateOf(i);
+          return (
+            <li key={p.to} className="relative flex justify-center">
+              <Link
+                to={p.to}
+                aria-current={state === "current" ? "step" : undefined}
+                aria-label={`Bước ${p.step.index}: ${p.label}`}
+                className="flex flex-col items-center gap-1.5 px-0.5 text-center"
               >
-                {state === "done" ? <Check className="h-3.5 w-3.5" aria-hidden /> : p.step.index}
-              </span>
-              <span className="min-w-0">
+                <StepDot state={state} index={p.step.index} className="h-8 w-8 text-xs" />
                 <span
                   className={cn(
-                    "block text-[11px] font-semibold uppercase tracking-wider",
-                    state === "current" ? "opacity-80" : "text-muted-foreground",
+                    "text-[11px] font-semibold leading-tight",
+                    state === "current" ? "text-primary" : "text-muted-foreground",
                   )}
                 >
                   {p.step.verb}
                 </span>
-                <span className="block truncate font-bold">{p.label}</span>
-              </span>
-            </Link>
-          </li>
-        );
-      })}
-    </ol>
+              </Link>
+            </li>
+          );
+        })}
+      </ol>
+
+      <ol className="hidden grid-cols-5 gap-2 md:grid">
+        {JOURNEY.map((p, i) => {
+          const state = stateOf(i);
+          return (
+            <li key={p.to}>
+              <Link
+                to={p.to}
+                aria-current={state === "current" ? "step" : undefined}
+                className={cn(
+                  "flex h-full items-center gap-2.5 rounded-xl border px-3 py-2.5 text-sm transition-[transform,border-color] duration-300",
+                  state === "current"
+                    ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-soft)]"
+                    : "bg-background/85 hover:-translate-y-0.5 hover:border-primary/40",
+                )}
+              >
+                <StepDot
+                  state={state}
+                  index={p.step.index}
+                  className={cn(
+                    "h-6 w-6 text-xs",
+                    state === "current" && "bg-primary-foreground text-primary ring-0",
+                  )}
+                />
+                <span className="min-w-0">
+                  <span
+                    className={cn(
+                      "block text-[11px] font-semibold uppercase tracking-wider",
+                      state === "current" ? "opacity-80" : "text-muted-foreground",
+                    )}
+                  >
+                    {p.step.verb}
+                  </span>
+                  <span className="block font-bold leading-tight">{p.label}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 }
 
@@ -94,7 +157,7 @@ export function PageHero({ page, title, description, tone = "light", actions }: 
       <Aurora />
       <div className="mx-auto max-w-6xl">
         <nav aria-label="Breadcrumb" className="animate-rise">
-          <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
             <li>
               <Link to="/" className="transition-colors hover:text-primary">
                 Trang chủ
@@ -119,13 +182,13 @@ export function PageHero({ page, title, description, tone = "light", actions }: 
               </p>
             )}
             <h1
-              className="animate-rise mt-4 text-4xl font-extrabold leading-[1.1] text-primary md:text-5xl"
+              className="animate-rise mt-4 text-3xl font-extrabold leading-[1.15] text-primary sm:text-4xl md:text-5xl"
               style={delay(120)}
             >
               {title}
             </h1>
             <p
-              className="animate-rise mt-4 max-w-2xl text-lg text-muted-foreground"
+              className="animate-rise mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg"
               style={delay(180)}
             >
               {description}

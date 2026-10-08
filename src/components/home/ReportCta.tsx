@@ -4,18 +4,18 @@ import { Reveal } from "@/components/motion/Reveal";
 
 export function ReportCta() {
   return (
-    <section className="px-4 pb-24">
+    <section className="px-4 pb-16 md:pb-24">
       <Reveal
         variant="scale"
         className="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-primary px-6 py-12 text-primary-foreground md:px-12"
       >
         <div
           aria-hidden
-          className="aurora-a absolute -right-24 -top-24 -z-10 h-80 w-80 rounded-full bg-white/10 blur-2xl"
+          className="aurora-a absolute -right-24 -top-24 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.16),transparent)]"
         />
         <div
           aria-hidden
-          className="aurora-b absolute -bottom-32 left-1/3 -z-10 h-80 w-80 rounded-full bg-black/10 blur-2xl"
+          className="aurora-b absolute -bottom-32 left-1/3 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(closest-side,rgb(0_0_0/0.16),transparent)]"
         />
         <div className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
           <div>

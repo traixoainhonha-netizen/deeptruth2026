@@ -99,7 +99,8 @@ export default function ThreatGlobe({ markers, arcs, view, focus, className }: P
       scale: state.scale,
       dark: 1,
       diffuse: 1.25,
-      mapSamples: 18000,
+      // Fewer land dots on small canvases: same look, far less GPU work on phones.
+      mapSamples: size < 480 ? 11000 : 18000,
       mapBrightness: 5.5,
       mapBaseBrightness: 0.04,
       baseColor: [0.16, 0.3, 0.33],

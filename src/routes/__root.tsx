@@ -19,8 +19,22 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PointerSpotlight } from "@/components/motion/PointerSpotlight";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 
-// Runs before first paint: lets CSS hide scroll-reveal content only when JS is available.
-const BOOT_SCRIPT = "document.documentElement.classList.add('js')";
+const FONT_CSS =
+  "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lexend:wght@700;800&display=swap";
+
+// Runs before first paint. Marks JS as available (scroll reveals rely on it) and
+// injects the web-font stylesheet: script-inserted stylesheets don't block rendering,
+// so text paints immediately in the fallback font and swaps when the fonts arrive.
+const BOOT_SCRIPT = `document.documentElement.classList.add('js');var f=document.createElement('link');f.rel='stylesheet';f.href=${JSON.stringify(FONT_CSS)};document.head.appendChild(f);`;
+
+// Opening the data connection early saves a DNS + TLS round trip on the first query.
+const SUPABASE_ORIGIN = (() => {
+  try {
+    return new URL(import.meta.env["VITE_SUPABASE_URL"] ?? "").origin;
+  } catch {
+    return null;
+  }
+})();
 
 // Toasts only follow user actions, so the toast UI loads after hydration, off the critical path.
 const Toaster = lazy(() => import("@/components/ui/sonner").then((m) => ({ default: m.Toaster })));
@@ -94,10 +108,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lexend:wght@600;700;800&display=swap",
-      },
+      ...(SUPABASE_ORIGIN
+        ? [{ rel: "preconnect", href: SUPABASE_ORIGIN, crossOrigin: "anonymous" as const }]
+        : []),
       { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
   }),
@@ -113,6 +126,13 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="vi" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+        {/* Raw HTML on purpose: React 19 hoists a <link rel="stylesheet"> element out of
+            <noscript> into <head>, which would make the fonts render-blocking again. */}
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html: `<link rel="stylesheet" href="${FONT_CSS.replace(/&/g, "&amp;")}">`,
+          }}
+        />
         <HeadContent />
       </head>
       <body>

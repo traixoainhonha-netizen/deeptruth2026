@@ -14,7 +14,7 @@ export function BackToTop() {
       aria-hidden={!visible}
       onClick={() => scrollToTarget(0, { offset: 0 })}
       className={cn(
-        "fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-lift)] transition-[opacity,transform] duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 active:scale-95",
+        "fixed bottom-4 right-4 z-40 grid h-11 w-11 place-items-center sm:bottom-5 sm:right-5 sm:h-12 sm:w-12 rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-lift)] transition-[opacity,transform] duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 active:scale-95",
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
       )}
     >

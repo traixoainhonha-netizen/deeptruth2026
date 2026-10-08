@@ -29,6 +29,7 @@ import {
   dangerColor,
   dangerLabel,
   dangerRgb,
+  shortRegionName,
   type ThreatCategory,
 } from "./model";
 import type { GlobeArc, GlobeMarker, GlobeView } from "./ThreatGlobe";
@@ -93,7 +94,7 @@ function LiveBadge({ status, updatedAt }: { status: LiveStatus; updatedAt: numbe
         ? "Mất kết nối trực tiếp"
         : "Đang kết nối…";
   return (
-    <p className="inline-flex items-center gap-2 rounded-full border bg-card/70 px-4 py-1.5 text-xs font-semibold backdrop-blur">
+    <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-full border bg-card/90 px-4 py-1.5 text-xs font-semibold">
       <span
         className={cn("live-dot", status !== "live" && "after:hidden")}
         style={status === "live" ? undefined : { background: "var(--muted-foreground)" }}
@@ -217,7 +218,9 @@ export function ThreatMapSection() {
     const hottest = [...(regionStats.data ?? [])].sort(
       (a, b) => b.reportsLast7d - a.reportsLast7d || b.reportCount - a.reportCount,
     )[0];
-    return { total, recent, avg, hottest: hottest?.name ?? null };
+    // Short label for the online bucket, so "TP. Hồ Chí Minh" is the longest name shown here.
+    const hottestName = hottest ? shortRegionName(hottest) : null;
+    return { total, recent, avg, hottest: hottestName };
   }, [categoryStats.data, regionStats.data]);
 
   const categoryCounts = useMemo(
@@ -269,10 +272,12 @@ export function ThreatMapSection() {
           </button>
         </div>
 
-        <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+        {/* Phones: three numbers in a row, the hotspot name on its own full-width row.
+            Wider screens: one row, with a wider column so every city name fits on one line. */}
+        <dl className="mt-6 grid grid-cols-3 gap-3 md:grid-cols-[1fr_1fr_1fr_1.6fr]">
           {[
-            { label: "Tổng báo cáo", value: <CountUp value={kpis.total} /> },
-            { label: "Trong 7 ngày qua", value: <CountUp value={kpis.recent} /> },
+            { label: "Tổng báo cáo", value: <CountUp value={kpis.total} />, wide: false },
+            { label: "Trong 7 ngày qua", value: <CountUp value={kpis.recent} />, wide: false },
             {
               label: "Mức nguy hiểm TB",
               value:
@@ -281,17 +286,33 @@ export function ThreatMapSection() {
                 ) : (
                   <span style={{ color: dangerColor(kpis.avg) }}>
                     <CountUp value={kpis.avg} decimals={1} />
-                    <span className="text-base">/5</span>
+                    <span className="text-sm sm:text-base">/5</span>
                   </span>
                 ),
+              wide: false,
             },
-            { label: "Điểm nóng tuần này", value: kpis.hottest ?? "—" },
+            { label: "Điểm nóng tuần này", value: kpis.hottest ?? "—", wide: true },
           ].map((k, i) => (
-            <Reveal key={k.label} delay={i * 70} className="card-soft px-4 py-4">
-              <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <Reveal
+              key={k.label}
+              delay={i * 70}
+              className={cn(
+                "card-soft flex flex-col justify-between px-3 py-3 sm:px-4 sm:py-4",
+                k.wide && "col-span-3 md:col-span-1",
+              )}
+            >
+              <dt className="text-[11px] font-medium uppercase leading-snug tracking-wider text-muted-foreground sm:text-xs">
                 {k.label}
               </dt>
-              <dd className="mt-1 truncate font-display text-2xl font-extrabold md:text-3xl">
+              <dd
+                className={cn(
+                  "mt-1 break-words font-display font-extrabold leading-tight",
+                  // Sized so "1.234", "4,0/5" and "TP. Hồ Chí Minh" each stay on one line, 320–1920px.
+                  k.wide
+                    ? "text-2xl lg:text-3xl"
+                    : "text-xl min-[360px]:text-2xl md:text-[1.7rem] lg:text-3xl",
+                )}
+              >
                 {k.value}
               </dd>
             </Reveal>
@@ -362,10 +383,10 @@ export function ThreatMapSection() {
                   className={cn("pointer-events-none absolute h-6 w-6 border-primary/50", pos)}
                 />
               ))}
-              <p className="pointer-events-none absolute bottom-2 left-3 rounded-md bg-background/60 px-2 py-1 font-mono text-[11px] text-primary backdrop-blur">
+              <p className="pointer-events-none absolute bottom-2 left-3 max-w-[calc(100%-1.5rem)] rounded-md bg-background/80 px-2 py-1 font-mono text-[11px] text-primary">
                 {view === "global"
                   ? "TOÀN CẦU · kéo để xoay"
-                  : `MỤC TIÊU · ${(selectedRegion?.name ?? "Việt Nam").toUpperCase()}`}
+                  : `MỤC TIÊU · ${(selectedRegion ? shortRegionName(selectedRegion) : "Việt Nam").toUpperCase()}`}
               </p>
             </div>
 
@@ -391,9 +412,9 @@ export function ThreatMapSection() {
                   {topRegions.map((r) => (
                     <li
                       key={r.regionCode}
-                      className="grid grid-cols-[7.5rem_1fr_auto] items-center gap-3 text-sm"
+                      className="grid grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-3 text-sm"
                     >
-                      <span className="truncate">{r.name}</span>
+                      <span className="leading-tight">{shortRegionName(r)}</span>
                       <span className="h-2 overflow-hidden rounded-full bg-muted">
                         <span
                           className="block h-full rounded-full transition-[width] duration-1000 ease-[var(--ease-out-expo)]"
@@ -414,17 +435,20 @@ export function ThreatMapSection() {
           <Reveal
             variant="scale"
             delay={120}
-            className="card-soft flex min-h-[32rem] flex-col p-4 sm:p-6"
+            className="card-soft flex flex-col p-4 sm:p-6 lg:min-h-[32rem]"
           >
-            <p className="flex items-center gap-2 font-bold">
-              <ShieldAlert className="h-5 w-5 text-primary" aria-hidden /> Luồng cảnh báo
-              <span className="ml-auto text-xs font-normal text-muted-foreground">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <p className="flex items-center gap-2 whitespace-nowrap font-bold">
+                <ShieldAlert className="h-5 w-5 self-center text-primary" aria-hidden /> Luồng cảnh
+                báo
+              </p>
+              <p className="text-xs text-muted-foreground">
                 Chạm vào báo cáo để định vị trên bản đồ
-              </span>
-            </p>
+              </p>
+            </div>
 
             <div
-              className="scrollbar-thin -mx-1 mt-4 flex gap-2 overflow-x-auto px-1 pb-1"
+              className="mt-4 flex flex-wrap gap-2"
               role="toolbar"
               aria-label="Lọc theo thủ đoạn"
             >
@@ -453,7 +477,7 @@ export function ThreatMapSection() {
 
             <div
               data-lenis-prevent
-              className="scrollbar-thin -mr-2 mt-4 max-h-[36rem] flex-1 overflow-y-auto pr-2"
+              className="scrollbar-thin -mr-2 mt-4 max-h-[min(36rem,70dvh)] flex-1 overflow-y-auto pr-2"
             >
               {!nearView || loadingFeed ? (
                 <FeedSkeleton />
@@ -580,7 +604,10 @@ export function ThreatMapSection() {
       </div>
 
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent data-lenis-prevent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent
+          data-lenis-prevent
+          className="max-h-[90vh] w-[calc(100%-1.5rem)] overflow-y-auto overscroll-contain rounded-2xl p-5 supports-[height:100dvh]:max-h-[90dvh] sm:max-w-2xl sm:p-6"
+        >
           <DialogHeader>
             <DialogTitle className="text-xl text-primary">Báo cáo một vụ Deepfake</DialogTitle>
             <DialogDescription>

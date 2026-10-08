@@ -75,7 +75,7 @@ export function Hero() {
         <div className="relative mx-auto w-full max-w-md">
           <div
             aria-hidden
-            className="absolute inset-[10%] -z-10 rounded-full bg-primary/20 blur-3xl"
+            className="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_22%,transparent),transparent)]"
           />
           <img
             {...HERO_IMAGE}
@@ -89,7 +89,7 @@ export function Hero() {
 
       {/* Quick-access strip: each cell is one link to the page behind the number. */}
       <dl
-        className="animate-rise mx-auto mt-12 grid max-w-6xl overflow-hidden rounded-3xl border bg-background/80 shadow-[var(--shadow-soft)] backdrop-blur-md md:mt-16 md:grid-cols-3"
+        className="animate-rise mx-auto mt-12 grid max-w-6xl overflow-hidden rounded-3xl border bg-background/95 shadow-[var(--shadow-soft)] md:mt-16 md:grid-cols-3"
         style={delay(360)}
       >
         {STATS.map((s, i) => (
@@ -115,7 +115,7 @@ export function Hero() {
                   {s.live && <span className="live-dot" aria-hidden />}
                   {s.value}
                 </Link>
-                <span className="block truncate text-xs text-muted-foreground">{s.hint}</span>
+                <span className="block text-xs leading-snug text-muted-foreground">{s.hint}</span>
               </dd>
             </div>
             <ArrowRight

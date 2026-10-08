@@ -10,7 +10,7 @@ const SPANS = ["md:col-span-3", "md:col-span-3", "md:col-span-2", "md:col-span-2
 
 export function FeatureGrid() {
   return (
-    <section className="px-4 py-24">
+    <section className="px-4 py-16 md:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Hành trình 5 bước"

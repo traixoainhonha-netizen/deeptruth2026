@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { Fragment, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { z } from "zod";
 import {
@@ -43,6 +43,21 @@ const hotlines = [
     href: "https://canhbao.khonggianmang.vn",
   },
 ];
+
+/**
+ * Lets a domain wrap after a dot ("canhbao." / "khonggianmang.vn") instead of mid-label,
+ * keeping the top-level domain attached so "vn" never sits alone on a line.
+ */
+function withDotBreaks(text: string) {
+  const parts = text.split(".");
+  return parts.map((part, i) => (
+    <Fragment key={i}>
+      {part}
+      {i < parts.length - 1 && "."}
+      {i < parts.length - 2 && <wbr />}
+    </Fragment>
+  ));
+}
 
 function formatSize(bytes: number) {
   return bytes < 1024 * 1024
@@ -139,7 +154,7 @@ function ReportForm() {
       {file ? (
         <div className="flex items-center gap-3 rounded-xl border bg-secondary px-4 py-3 text-sm">
           <FileCheck2 className="h-5 w-5 shrink-0 text-primary" aria-hidden />
-          <span className="min-w-0 flex-1 truncate font-semibold">{file.name}</span>
+          <span className="line-clamp-2 min-w-0 flex-1 break-all font-semibold">{file.name}</span>
           <span
             className={cn(
               "shrink-0 text-xs",
@@ -160,7 +175,9 @@ function ReportForm() {
       ) : (
         <label className="field flex cursor-pointer items-center gap-3 border-dashed text-muted-foreground transition-colors hover:border-primary/50 hover:bg-secondary/40">
           <Upload className="h-4 w-4 shrink-0" />
-          <span className="truncate">Tải lên bằng chứng (ảnh, video, âm thanh – tối đa 10MB)</span>
+          <span className="leading-snug">
+            Tải lên bằng chứng (ảnh, video, âm thanh – tối đa 10MB)
+          </span>
           <input
             type="file"
             className="hidden"
@@ -214,7 +231,9 @@ export function Report() {
                         <h.icon className="h-5 w-5" aria-hidden />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block break-words font-bold text-primary">{h.title}</span>
+                        <span className="block break-words font-bold text-primary">
+                          {withDotBreaks(h.title)}
+                        </span>
                         <span className="block text-sm text-muted-foreground">{h.desc}</span>
                       </span>
                       {external ? (
